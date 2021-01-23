@@ -1,18 +1,37 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import moment from 'moment';
-import { Text, TouchableOpacity, View } from 'react-native';
-import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
+import React from "react";
+import PropTypes from "prop-types";
+import moment from "moment";
+import { Text, TouchableOpacity, View } from "react-native";
+import GestureRecognizer, {
+  swipeDirections,
+} from "react-native-swipe-gestures";
 
-import styles from './styles';
-import 'moment/min/locales';
+import styles from "./styles";
+import "moment/min/locales";
 
-const DATE_FORMAT = 'DD-MM-YYYY';
-const MONTH_YEAR_FORMAT = 'YYYY MM';
+moment.updateLocale("vi", {
+  monthsShort: [
+    "Tháng 1",
+    "Tháng 2",
+    "Tháng 3",
+    "Tháng 4",
+    "Tháng 5",
+    "Tháng 6",
+    "Tháng 7",
+    "Tháng 8",
+    "Tháng 9",
+    "Tháng 10",
+    "Tháng 11",
+    "Tháng 12",
+  ],
+});
+
+const DATE_FORMAT = "DD-MM-YYYY";
+const MONTH_YEAR_FORMAT = "YYYY MM";
 
 const getMonthListFirstDayDate = (date) => {
   const monthList = [];
-  const year = date.format('YYYY');
+  const year = date.format("YYYY");
   for (let i = 1; i < 13; i += 1) {
     monthList.push(moment(`01-${i}-${year}`, DATE_FORMAT));
   }
@@ -28,9 +47,9 @@ class MonthPicker extends React.PureComponent {
 
   getSelectedBackgroundColor(month) {
     if (
-      this.props.selectedBackgroundColor
-      && moment(month).format(MONTH_YEAR_FORMAT)
-      === moment(this.props.selectedDate).format(MONTH_YEAR_FORMAT)
+      this.props.selectedBackgroundColor &&
+      moment(month).format(MONTH_YEAR_FORMAT) ===
+        moment(this.props.selectedDate).format(MONTH_YEAR_FORMAT)
     ) {
       return { backgroundColor: this.props.selectedBackgroundColor };
     }
@@ -39,15 +58,15 @@ class MonthPicker extends React.PureComponent {
 
   getSelectedForeGround(month) {
     if (
-      this.props.selectedMonthTextStyle
-      && moment(month).format(MONTH_YEAR_FORMAT)
-      === moment(this.props.selectedDate).format(MONTH_YEAR_FORMAT)
+      this.props.selectedMonthTextStyle &&
+      moment(month).format(MONTH_YEAR_FORMAT) ===
+        moment(this.props.selectedDate).format(MONTH_YEAR_FORMAT)
     ) {
       return this.props.selectedMonthTextStyle;
     }
     if (
-      moment(month).format(MONTH_YEAR_FORMAT)
-      === moment(this.props.currentDate).format(MONTH_YEAR_FORMAT)
+      moment(month).format(MONTH_YEAR_FORMAT) ===
+      moment(this.props.currentDate).format(MONTH_YEAR_FORMAT)
     ) {
       return this.props.currentMonthTextStyle;
     }
@@ -58,7 +77,7 @@ class MonthPicker extends React.PureComponent {
     return (
       <View
         style={[
-          isDisabled === true && { flex: 1, alignItems: 'center' },
+          isDisabled === true && { flex: 1, alignItems: "center" },
           styles.monthStyle,
           this.getSelectedBackgroundColor(month),
         ]}
@@ -81,7 +100,7 @@ class MonthPicker extends React.PureComponent {
       return (
         <TouchableOpacity
           onPress={() => this.handleMonthTaps(month)}
-          style={{ flex: 1, alignItems: 'center' }}
+          style={{ flex: 1, alignItems: "center" }}
         >
           {this.getMonthActualComponent(month)}
         </TouchableOpacity>
@@ -98,35 +117,35 @@ class MonthPicker extends React.PureComponent {
       return true;
     }
     return false;
-  }
+  };
 
   isYearEnabled = (isNext) => {
-    const minYear = moment(this.props.minDate).format('YYYY');
-    const maxYear = moment(this.props.maxDate).format('YYYY');
-    const currentYear = moment(this.state.initialView).format('YYYY');
+    const minYear = moment(this.props.minDate).format("YYYY");
+    const maxYear = moment(this.props.maxDate).format("YYYY");
+    const currentYear = moment(this.state.initialView).format("YYYY");
     if (
-      (isNext && currentYear < maxYear)
-      || (!isNext && currentYear > minYear)
+      (isNext && currentYear < maxYear) ||
+      (!isNext && currentYear > minYear)
     ) {
       return true;
     }
     return false;
-  }
+  };
 
   handleMonthTaps = (month) => {
     this.props.onMonthChange(month);
-  }
+  };
 
   handNextPrevTaps = (isNext) => {
     if (this.isYearEnabled(isNext)) {
       // eslint-disable-next-line
       const currentInitialView = this.state.initialView.clone();
       this.setState({
-        initialView: currentInitialView.add(isNext ? 1 : -1, 'y'),
+        initialView: currentInitialView.add(isNext ? 1 : -1, "y"),
       });
       this.props.onYearChange(currentInitialView);
     }
-  }
+  };
 
   renderQ = (months, qNo) => {
     const startMonth = qNo * 3;
@@ -137,12 +156,12 @@ class MonthPicker extends React.PureComponent {
         {this.getMonthComponent(months[startMonth + 2])}
       </View>
     );
-  }
+  };
 
   renderHeader = () => {
-    const selectedYear = moment(this.state.initialView).format('YYYY');
-    const maxYear = moment(this.props.maxDate).format('YYYY');
-    const minYear = moment(this.props.minDate).format('YYYY');
+    const selectedYear = moment(this.state.initialView).format("YYYY");
+    const maxYear = moment(this.props.maxDate).format("YYYY");
+    const minYear = moment(this.props.minDate).format("YYYY");
 
     return (
       <View
@@ -151,39 +170,39 @@ class MonthPicker extends React.PureComponent {
           {
             borderBottomColor: this.props.seperatorColor,
             borderBottomWidth: this.props.seperatorHeight,
-            alignSelf: 'center',
+            alignSelf: "center",
             height: 64,
           },
         ]}
       >
         <TouchableOpacity onPress={() => this.handNextPrevTaps(false)}>
-          {this.props.prevIcon
-            ? (
-              this.props.prevIcon
-            ) : (
-              <Text style={selectedYear <= minYear && this.props.yearDisabledStyle}>
-                {this.props.prevText}
-              </Text>
-            )}
+          {this.props.prevIcon ? (
+            this.props.prevIcon
+          ) : (
+            <Text
+              style={selectedYear <= minYear && this.props.yearDisabledStyle}
+            >
+              {this.props.prevText}
+            </Text>
+          )}
         </TouchableOpacity>
         <View style={styles.yearViewStyle}>
-          <Text style={this.props.yearTextStyle}>
-            {selectedYear}
-          </Text>
+          <Text style={this.props.yearTextStyle}>{selectedYear}</Text>
         </View>
         <TouchableOpacity onPress={() => this.handNextPrevTaps(true)}>
-          {this.props.nextIcon
-            ? (
-              this.props.nextIcon
-            ) : (
-              <Text style={selectedYear >= maxYear && this.props.yearDisabledStyle}>
-                {this.props.nextText}
-              </Text>
-            )}
+          {this.props.nextIcon ? (
+            this.props.nextIcon
+          ) : (
+            <Text
+              style={selectedYear >= maxYear && this.props.yearDisabledStyle}
+            >
+              {this.props.nextText}
+            </Text>
+          )}
         </TouchableOpacity>
       </View>
     );
-  }
+  };
 
   handleSwipe = (gestureName) => {
     const { SWIPE_LEFT, SWIPE_RIGHT } = swipeDirections;
@@ -197,12 +216,10 @@ class MonthPicker extends React.PureComponent {
       default:
         break;
     }
-  }
+  };
 
   render() {
-    const months = getMonthListFirstDayDate(
-      this.state.initialView,
-    );
+    const months = getMonthListFirstDayDate(this.state.initialView);
     const {
       containerStyle,
       swipable,
@@ -236,34 +253,34 @@ MonthPicker.defaultProps = {
   selectedDate: moment(),
   currentDate: moment(),
   maxDate: moment(),
-  minDate: moment('01-01-1900', 'DD-MM-YYYY'),
-  selectedBackgroundColor: '#000',
-  selectedMonthTextStyle: { color: '#fff' },
+  minDate: moment("01-01-1990", "DD-MM-YYYY"),
+  selectedBackgroundColor: "rgb(47, 172, 79)",
+  selectedMonthTextStyle: { color: "#fff" },
   seperatorHeight: 1,
-  seperatorColor: '#b6c3cb',
+  seperatorColor: "#b6c3cb",
   nextIcon: null,
   prevIcon: null,
-  nextText: 'Next',
-  prevText: 'Prev',
+  nextText: "Tiếp",
+  prevText: "Lùi",
   containerStyle: null,
-  yearTextStyle: null,
-  monthFormat: 'MMM',
+  yearTextStyle: { fontSize: 20, fontWeight: "500" },
+  monthFormat: "MMMM",
   currentMonthTextStyle: {
-    color: '#25cc9d',
+    color: "black",
   },
-  monthTextStyle: { color: '#000' },
+  monthTextStyle: { color: "#000", fontSize: 12 },
   initialView: moment(),
-  onMonthChange: () => { },
-  onYearChange: () => { },
-  monthDisabledStyle: { color: '#00000050' },
-  yearDisabledStyle: { color: '#00000050' },
-  localeLanguage: 'en',
+  onMonthChange: () => {},
+  onYearChange: () => {},
+  monthDisabledStyle: { color: "#00000050" },
+  yearDisabledStyle: { color: "#00000050" },
+  localeLanguage: "vi",
   localeSettings: {},
   swipable: false,
   velocityThreshold: 0.3,
   directionalOffsetThreshold: 80,
   gestureIsClickThreshold: 5,
-}
+};
 
 MonthPicker.propTypes = {
   selectedDate: PropTypes.any,
@@ -293,6 +310,6 @@ MonthPicker.propTypes = {
   velocityThreshold: PropTypes.number,
   directionalOffsetThreshold: PropTypes.number,
   gestureIsClickThreshold: PropTypes.number,
-}
+};
 
 export default MonthPicker;

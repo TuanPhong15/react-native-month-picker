@@ -1,17 +1,18 @@
-import { StyleSheet } from 'react-native';
+import {StyleSheet} from 'react-native';
 
 // define your styles
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center',
+    // alignItems: 'center',
     backgroundColor: '#fff',
   },
   monthStyle: {
     height: 40,
-    width: 40,
+    width: 80,
     borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
+    overflow: 'hidden'
   },
   headerStyle: {
     height: 64,
